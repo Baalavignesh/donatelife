@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import Card from "../shared/card";
 import NavBar from "../shared/navbar";
-const Dashboard = () => {
+
+const UserDashboard = () => {
   const navigate = useNavigate();
 
   // FETCH DATA RECORDS FROM MONGODB AND STORE IN REQUESTS
@@ -14,22 +15,8 @@ const Dashboard = () => {
   return (
     <div className="bg-custom-black min-h-screen text-custom-white">
       <NavBar />
-      
-
-      {/* Cards Section */}
-      <div className="flex flex-col items-center gap-6 p-6">
-        {requests.map((request, index) => (
-          <Card
-            key={index}
-            reqNo={request.reqNo}
-            status={request.status}
-            bloodType={request.bloodType}
-            urgency={request.urgency}
-          />
-        ))}
-      </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default UserDashboard;

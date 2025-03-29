@@ -5,6 +5,14 @@ import { Fade } from "@mui/material";
 import { setUserInformation } from "../features/auth/authSlice";
 import { LoginUser } from "../services/auth";
 
+// Define interface for user information
+interface UserInfo {
+  username?: string;
+  donorOrganization?: boolean;
+  // Add other user properties as needed
+  [key: string]: any; // Allow for other properties
+}
+
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -23,12 +31,18 @@ const Login = () => {
     const response = await LoginUser(username, password);
     console.log(response)
     if (response.success === true) {
+      // Store user information in Redux
       dispatch(
         setUserInformation({
-          userInfo: response.userInfo,
-          })
+          userInfo: response.userInfo as UserInfo,
+        })
       );
-      navigate("/dashboard");
+      // Navigate based on user type
+      if(response.userInfo.donorOrganization){
+        navigate("/dashboard"); 
+      }else{
+        navigate("/userdashboard");
+      }
     } else {
       setError("Invalid username or password");
     }

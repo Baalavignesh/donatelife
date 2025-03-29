@@ -71,7 +71,7 @@ const DonorRegister = () => {
     const response = await registerDonar(formData);
     console.log(response);
     if(response.success){
-        navigate("/")
+        navigate("/userdashboard")
     }else{  
         setError(response.message)
     }
