@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
+import Register from "./pages/register";
 import Error from "./pages/error";
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/dashboard" Component={Dashboard} />
+        <Route path="/register" Component={Register} />
         <Route path="/" Component={Login} />
         <Route path="*" Component={Error} />
       </Routes>
