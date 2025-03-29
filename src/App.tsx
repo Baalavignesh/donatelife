@@ -4,6 +4,7 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import Error from "./pages/error";
 import PostReq from "./pages/postreq"; 
+import DonorRegister from "./pages/donor_register";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/dashboard" Component={Dashboard} />
         <Route path="/register" Component={Register} />
+        <Route path="/donorregister" Component={DonorRegister} />
         <Route path="/postreq" Component={PostReq} /> {/* ✅ New route */}
         <Route path="/" Component={Login} />
         <Route path="*" Component={Error} />

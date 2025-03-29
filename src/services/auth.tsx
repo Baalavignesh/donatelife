@@ -25,4 +25,19 @@ const registerUser = async (userData: any) => {
   return response.json();
 };
 
-export { LoginUser, registerUser };
+
+const registerDonar = async (orgData: any) => {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_API}/auth/registerdonor`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(orgData),
+  });
+
+  
+
+  return response.json();
+};
+
+export { LoginUser, registerUser, registerDonar };
