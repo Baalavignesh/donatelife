@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setTokens } from "../features/auth/authSlice";
+import { setUserInformation } from "../features/auth/authSlice";
 
 const NavBar: React.FC  = () => {
   let navigate = useNavigate();
@@ -8,10 +8,8 @@ const NavBar: React.FC  = () => {
 
   const handleLogout = () => {
     dispatch(
-      setTokens({
-        accessToken: "",
-        refreshToken: "",
-        idToken: "",
+      setUserInformation({
+        userInfo: {},
       })
     );
     navigate("/");

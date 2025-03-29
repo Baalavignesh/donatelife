@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Fade } from "@mui/material";
+import { registerUser } from "../services/auth";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -9,12 +10,32 @@ const Register = () => {
     password: "",
     confirmPassword: "",
     age: "",
-    address: "",
     phoneNumber: "",
+    location: {
+      lat: 0,
+      long: 0,
+    },
   });
   const [error, setError] = useState("");
 
+  const getAddress = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setFormData((prev) => ({
+            ...prev,
+            location: {
+              lat: position.coords.latitude,
+              long: position.coords.longitude,
+            },
+          }));
+        },
+      );
+    }
+  };  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -22,8 +43,10 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
+    
     e.preventDefault();
+    console.log(formData);
     
     // Simple validation
     if (
@@ -31,7 +54,8 @@ const Register = () => {
       !formData.password ||
       !formData.confirmPassword ||
       !formData.age ||
-      !formData.address ||
+      !formData.location.lat ||
+      !formData.location.long ||
       !formData.phoneNumber
     ) {
       setError("Please fill in all fields");
@@ -48,11 +72,13 @@ const Register = () => {
       return;
     }
     
-    // In a real app, you would send this data to an API
-    // For now, just navigate to login
-    navigate("/");
+    const response = await registerUser(formData);
+    console.log(response);
+    
+    // navigate("/");
   };
 
+  
   return (
     <div className="bg-custom-black min-h-screen flex flex-col items-center justify-center py-8">
       <Fade in={true} timeout={1000}>
@@ -73,7 +99,7 @@ const Register = () => {
                 id="username"
                 name="username"
                 type="text"
-                required
+                
                 className="w-full p-3 rounded-lg bg-secondary text-custom-white border border-secondary focus:ring-primary focus:border-primary focus:outline-none"
                 placeholder="Choose a username"
                 value={formData.username}
@@ -89,7 +115,7 @@ const Register = () => {
                 id="password"
                 name="password"
                 type="password"
-                required
+                
                 className="w-full p-3 rounded-lg bg-secondary text-custom-white border border-secondary focus:ring-primary focus:border-primary focus:outline-none"
                 placeholder="Create a password"
                 value={formData.password}
@@ -105,7 +131,7 @@ const Register = () => {
                 id="confirmPassword"
                 name="confirmPassword"
                 type="password"
-                required
+                
                 className="w-full p-3 rounded-lg bg-secondary text-custom-white border border-secondary focus:ring-primary focus:border-primary focus:outline-none"
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
@@ -121,7 +147,7 @@ const Register = () => {
                 id="age"
                 name="age"
                 type="number"
-                required
+                
                 min="18"
                 className="w-full p-3 rounded-lg bg-secondary text-custom-white border border-secondary focus:ring-primary focus:border-primary focus:outline-none"
                 placeholder="Enter your age"
@@ -131,18 +157,30 @@ const Register = () => {
             </div>
             
             <div>
+              <label htmlFor="getLocation" className="block text-sm font-medium mb-2">
+                Get Location
+              </label>
+              <button
+                type="button"
+                onClick={getAddress}    
+                  className="w-full p-3 rounded-lg bg-secondary text-custom-white border border-secondary focus:ring-primary focus:border-primary focus:outline-none hover:bg-secondary/80 transition-colors duration-200 "
+              >
+                Get Location
+              </button>
+            </div>
+            <div>
               <label htmlFor="address" className="block text-sm font-medium mb-2">
-                Address
+                Address - Latitude and Longitude
               </label>
               <input
                 id="address"
                 name="address"
                 type="text"
-                required
+                disabled
                 className="w-full p-3 rounded-lg bg-secondary text-custom-white border border-secondary focus:ring-primary focus:border-primary focus:outline-none"
-                placeholder="Enter your address"
-                value={formData.address}
-                onChange={handleChange}
+                placeholder="Latitude and Longitude"
+                value={formData.location.lat + " " + formData.location.long}
+                // onChange={handleChange}
               />
             </div>
             
@@ -154,7 +192,7 @@ const Register = () => {
                 id="phoneNumber"
                 name="phoneNumber"
                 type="tel"
-                required
+                
                 className="w-full p-3 rounded-lg bg-secondary text-custom-white border border-secondary focus:ring-primary focus:border-primary focus:outline-none"
                 placeholder="Enter your phone number"
                 value={formData.phoneNumber}
