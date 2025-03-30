@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Dashboard from "./pages/dashboard";
+import Dashboard from "./pages/bank_dashboard";
 import Login from "./pages/login";
 import DonorRegister from "./pages/donor_register";
 

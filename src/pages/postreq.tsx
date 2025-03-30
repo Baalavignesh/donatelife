@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Fade } from "@mui/material";
-
+import { createRequest } from "../services/bank";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 // Tailwind style variables
 const inputBase =
   "p-2 rounded-lg bg-secondary text-custom-white border border-secondary focus:ring-primary focus:border-primary focus:outline-none";
@@ -14,10 +16,15 @@ const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 const urgencyLevels = ["High", "Low"];
 
 const PostReq = () => {
-  const [req, setReq] = useState({
+
+  const user = useSelector((state: any) => state.authStore.userInfo);
+  const navigate = useNavigate();
+
+  const [req, setReq] = useState({  
     group: "A+",
     location: { lat: 0, long: 0 },
     urgency: "Low",
+    id: user.username
   });
 
   const [locationMode, setLocationMode] = useState<"current" | "manual">("current");
@@ -43,6 +50,19 @@ const PostReq = () => {
       );
     } else {
       setError("Geolocation is not supported by your browser.");
+    }
+  };
+
+  const handleSubmitRequest = async () => {
+    try {
+
+      console.log(req);
+
+      const response = await createRequest(req);
+      console.log("Request submitted:", response);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error submitting request:", error);
     }
   };
 
@@ -174,7 +194,7 @@ const PostReq = () => {
           {/* Submit Button */}
           <div className="text-center mt-6">
             <button
-              onClick={() => console.log("Request submitted:", req)}
+              onClick={handleSubmitRequest}
               className={`w-full p-3 ${buttonBase} ${selectedButton}`}
             >
               Submit Requirement
