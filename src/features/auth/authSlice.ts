@@ -1,12 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { UserInfo } from "../../types/userInfo";
 
 // Define interface for user information
-interface UserInfo {
-  username?: string;
-  donorOrganization?: boolean;
-  // Add other user properties as needed
-  [key: string]: any; // Allow for other properties
-}
+
 
 // Define interface for the auth state
 interface AuthState {
@@ -14,7 +10,15 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  userInfo: {},
+  userInfo: {
+    username: "",
+    donorOrganization: false,
+    location: { lat: 0, long: 0 },
+    _id: "",
+    bloodGroup: "",
+    phoneNumber: "",
+    createdAt: "",
+  },
 };
 
 const authSlice = createSlice({

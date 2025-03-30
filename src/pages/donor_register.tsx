@@ -64,6 +64,12 @@ const DonorRegister = () => {
     }
 
     const response = await registerUser(formData);
+    if(response.success){
+      navigate("/userdashboard");
+    }else{
+      setError(response.message);
+    }
+
     console.log(response);
   };
 

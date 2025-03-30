@@ -3,14 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { setUserInformation } from "../features/auth/authSlice";
 import { useEffect, useState } from "react";
 import { RootState } from "../store/store";
-
-// Define interface for user information
-interface UserInfo {
-  username?: string;
-  donorOrganization?: boolean;
-  // Add other user properties as needed
-  [key: string]: any; // Allow for other properties
-}
+import { UserInfo } from "../types/userInfo"; 
 
 const NavBar: React.FC = () => {
   let navigate = useNavigate();

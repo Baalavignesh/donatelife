@@ -10,7 +10,7 @@ interface UserInfo {
   _id: string; // Assuming ObjectId is represented as a string
   username: string;
   password: string;
-  age?: number;
+  bloodGroup: string;
   location: {
     lat: number;
     long: number;

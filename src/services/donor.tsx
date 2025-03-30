@@ -1,6 +1,9 @@
-const getSpecificBankRequest = async (username: string) => {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_API}/donor/getspecificbankrequest/${}`, {
+const getSpecificBankRequest = async (bloodGroup: string) => {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_API}/user/getspecificbankrequest/${bloodGroup}`, {
         method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
     });
     return response.json();
 };

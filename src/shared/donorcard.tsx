@@ -1,33 +1,28 @@
-import { ReachedUser, Location } from "../pages/bank_dashboard";
 
 interface CardProps {
+  cardInfo: any;
   reqNo: number;
   status: string;
   bloodType: string;
   urgency: string;
-  location: Location;
-  reachedUsers: ReachedUser[];
-  createdAt: string;
 }
 
 export default function DonorCard({
-  reqNo,
+  cardInfo,
+  reqNo,  
   status,
   bloodType,
   urgency,
-  location,
-  reachedUsers,
-  createdAt,
 }: CardProps) {
   const urgencyColor = urgency === "High" ? "bg-red-500" : "bg-yellow-400";
   const statusColor =
-    status === "Fulfilled" ? "text-green-400" : "text-red-400";
+    cardInfo.status === "Fulfilled" ? "text-green-400" : "text-red-400";
 
   return (
     <div className="w-full max-w-sm bg-secondary text-custom-white p-6 rounded-xl shadow border border-secondary space-y-4">
       <div className="flex justify-between">
         <span className="text-base font-semibold">Req. No:</span>
-        <span className="text-base font-medium">{reqNo}</span>
+        <span className="text-base font-medium">{reqNo+1}</span>
       </div>
 
       <div className="flex justify-between">
@@ -50,17 +45,23 @@ export default function DonorCard({
       </div>
       <div className="flex justify-between">
         <span className="text-base font-semibold">Reached Users:</span>
-        <span className="text-base font-medium">{reachedUsers.length}</span>
+        <span className="text-base font-medium">{cardInfo.reachedUsers.length}</span>
       </div>
       <div className="flex justify-between">
         <span className="text-base font-semibold">Created At:</span>
         <span className="text-base font-medium">
-          {new Date(createdAt).toLocaleString([], {
+          {new Date(cardInfo.createdAt).toLocaleString([], {
             hour: "2-digit",
             minute: "2-digit",
             hour12: true,
           })}
         </span>
+      </div>
+
+      <div>
+      <button className="w-full mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded">
+        Accept
+      </button>
       </div>
     </div>
   );
