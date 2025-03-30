@@ -3,6 +3,9 @@ import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import Error from "./pages/error";
+import Leaflet from "./shared/mapComponent";
+
+
 
 function App() {
   return (
@@ -11,6 +14,7 @@ function App() {
         <Route path="/dashboard" Component={Dashboard} />
         <Route path="/register" Component={Register} />
         <Route path="/" Component={Login} />
+        <Route path="/leaflet" Component={Leaflet} />
         <Route path="*" Component={Error} />
       </Routes>
     </Router>

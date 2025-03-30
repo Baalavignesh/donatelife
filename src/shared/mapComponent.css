@@ -1,0 +1,11 @@
+/* src/MapComponent.css */
+#map {
+    width: 100%;
+    /* Make the map take up the full width of its container */
+    height: 600px;
+    /* Set a fixed height for the map */
+    border: 1px solid #ccc;
+    /* Optional: Add a border for better visibility */
+}
+
+/* You can add other styles here if needed, for example, to customize the map container's position */
