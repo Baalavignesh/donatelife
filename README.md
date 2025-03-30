@@ -1,4 +1,5 @@
 # Donate Life
+![](screenshots/logo.png) 
 
 ## Overview  
 **Donate Life** is a platform that connects blood banks with donors in real time during emergencies. Blood banks can post urgent blood requests, and nearby donors receive SMS and email notifications. If no donors respond, the search radius expands until a match is found. A machine learning model also predicts future blood demand, helping blood banks proactively manage inventory.
