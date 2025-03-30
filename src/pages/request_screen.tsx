@@ -39,7 +39,7 @@ const RequestScreen = () => {
         }
         console.log(smsData)
         try {
-          // await sendSMS(smsData);
+          await sendSMS(smsData);
         } catch (error) {
           console.error("Error sending SMS:", error);
         }

@@ -60,7 +60,7 @@ const PostReq = () => {
 
       const response = await createRequest(req);
       console.log("Request submitted:", response);
-      navigate("/dashboard");
+      navigate("/bankdashboard");
     } catch (error) {
       console.error("Error submitting request:", error);
     }
