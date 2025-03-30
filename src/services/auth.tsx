@@ -26,7 +26,7 @@ const registerUser = async (userData: any) => {
 };
 
 
-const registerDonar = async (orgData: any) => {
+const registerBank = async (orgData: any) => {
   const response = await fetch(`${import.meta.env.VITE_BACKEND_API}/auth/registerdonor`, {
     method: "POST",
     headers: {
@@ -40,4 +40,4 @@ const registerDonar = async (orgData: any) => {
   return response.json();
 };
 
-export { LoginUser, registerUser, registerDonar };
+export { LoginUser, registerUser, registerBank };
