@@ -65,4 +65,4 @@ node index.js  # or npm run dev for Vite-based frontend
 ## Links  
 🔗 **Frontend Repo:** [GitHub](https://github.com/Baalavignesh/donatelife)  
 🔗 **Backend Repo:** [GitHub](https://github.com/Baalavignesh/donatelife_backend)  
-🔗 **Machine Learning :** [Notebook](https://github.com/Baalavignesh/hoohacks25_backend/LinearRegressionBloodBank.pdf)  
+🔗 **Machine Learning :** [Notebook](https://github.com/Baalavignesh/donatelife_backend/blob/main/LinearRegressionBloodBank.pdf)  
