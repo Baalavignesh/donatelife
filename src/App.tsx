@@ -7,6 +7,7 @@ import DonorRegister from "./pages/donor_register";
 import PostReq from "./pages/postreq";
 import BankRegister from "./pages/bank_register";
 import UserDashboard from "./pages/user_dashboard";
+import RequestScreen from "./pages/request_screen";
 
 function App() {
   return (
@@ -16,9 +17,9 @@ function App() {
         <Route path="/userdashboard" Component={UserDashboard} />
         <Route path="/donorregister" Component={DonorRegister} />
         <Route path="/bankregister" Component={BankRegister} />
+        <Route path="/bankdashboard/:reqNo" Component={RequestScreen} />
         <Route path="/postreq" Component={PostReq} />
         <Route path="/" Component={Login} />
-        <Route path="/leaflet" Component={Leaflet} />
         <Route path="*" Component={Error} />
       </Routes>
     </Router>

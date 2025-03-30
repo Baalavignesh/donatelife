@@ -58,6 +58,7 @@ const Dashboard = () => {
           {myRequests.map((request: BankRequest, index) => (
           <Card
             key={index}
+            _id={request._id}
             reqNo={index + 1}
             status={request.status}
             bloodType={request.group}

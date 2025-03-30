@@ -19,4 +19,14 @@ const getAllRequests = async (username: string) => {
     return response.json();
 };      
 
-export { createRequest, getAllRequests };
+const getSpecificBloodGroup = async (bloodGroup: string) => {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_API}/bank/getspecificbloodgroup/${bloodGroup}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    return response.json();
+};
+
+export { createRequest, getAllRequests, getSpecificBloodGroup };

@@ -46,9 +46,7 @@ const UserDashboard = () => {
     const [myRequests, setMyRequests] = useState<[]>([]);
 
     const getMyRequests = async () => {
-      console.log(user.bloodGroup);
         const response = await getSpecificBankRequest(user.bloodGroup);
-        console.log(response);
         setMyRequests(response);
       };
 
