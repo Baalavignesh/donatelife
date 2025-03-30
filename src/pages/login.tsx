@@ -7,9 +7,18 @@ import { LoginUser } from "../services/auth";
 
 // Define interface for user information
 interface UserInfo {
-  username?: string;
+  _id: string; // Assuming ObjectId is represented as a string
+  username: string;
+  password: string;
+  age?: number;
+  location: {
+    lat: number;
+    long: number;
+  };
+  phoneNumber: string;
+  createdAt: string; // Assuming date is represented as a string
   donorOrganization?: boolean;
-  // Add other user properties as needed
+  __v: number;
   [key: string]: any; // Allow for other properties
 }
 
@@ -39,7 +48,7 @@ const Login = () => {
       );
       // Navigate based on user type
       if(response.userInfo.donorOrganization){
-        navigate("/dashboard"); 
+        navigate("/bankdashboard"); 
       }else{
         navigate("/userdashboard");
       }
