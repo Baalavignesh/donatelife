@@ -33,9 +33,17 @@ const NavBar: React.FC = () => {
 
   return (
     <div className="p-4 pl-24 pr-24 flex justify-between items-center bg-custom-black text-white border-b border-primary">
-      <h2 onClick={() => navigate("/dashboard")} className="cursor-pointer">
-        Donate Life
-      </h2>
+      {
+        isOrg ? (
+          <h2 onClick={() => navigate("/bankdashboard")} className="cursor-pointer">
+            Donate Life
+          </h2>
+        ) : (
+          <h2 onClick={() => navigate("/userdashboard")} className="cursor-pointer">
+            Donate Life
+          </h2>
+        )
+      }
       <div className="flex gap-12 items-center">
         {/* Display username if available */}
         {userInfo && userInfo.username && (

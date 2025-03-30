@@ -43,7 +43,7 @@ const Login = () => {
       // Store user information in Redux
       dispatch(
         setUserInformation({
-          userInfo: response.userInfo as UserInfo,
+          userInfo: response.userInfo,
         })
       );
       // Navigate based on user type

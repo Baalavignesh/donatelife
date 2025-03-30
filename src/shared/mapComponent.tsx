@@ -5,7 +5,6 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.heat"; // Import heatmap support
 import { UserInfo } from "../types/userInfo";
-import { RootState } from "../store/store";
 import { useSelector } from "react-redux";
 
 // Fix Leaflet marker icon issue
@@ -29,45 +28,25 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// Group markers by unique lat/lng to calculate density
-const calculateHeatPoints = (data: { lat: number; lng: number }[]) => {
-  const pointMap = new Map<string, number>();
 
-
-  // Count the number of occurrences at each location
-  data.forEach((city) => {
-    const key = `${city.lat},${city.lng}`;
-    if (pointMap.has(key)) {
-      pointMap.set(key, pointMap.get(key)! + 1);
-    } else {
-      pointMap.set(key, 1);
-    }
-  });
-
-  // Convert grouped points to heatmap format
-  const heatPoints = Array.from(pointMap.entries()).map(([key, count]) => {
-    const [lat, lng] = key.split(",").map(Number);
-    return [lat, lng, count]; // lat, lng, and intensity
-  });
-
-  return heatPoints;
-};
-
-const MapComponent: React.FC<{ bloodGroupPeople: UserInfo[] }> = ({
-  bloodGroupPeople,
+const MapComponent: React.FC<{ bloodGroupPeople: UserInfo[], radius: number }> = ({
+  bloodGroupPeople, radius
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
+  const circleRef = useRef<L.Circle | null>(null);
+  const markersRef = useRef<L.Marker[]>([]);
   const [mapLoaded, setMapLoaded] = useState(false);
 
   const user = useSelector((state: any) => state.authStore.userInfo);
 
-  console.log("User from Redux:", user);
-  console.log("Blood Group People:", bloodGroupPeople);
+  console.log("MapComponent rendered with radius:", radius);
+  console.log("Blood Group People count:", bloodGroupPeople?.length || 0);
 
   // Clear and reinitialize map when component unmounts
   useEffect(() => {
     return () => {
+      clearAllMarkers();
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
@@ -75,49 +54,57 @@ const MapComponent: React.FC<{ bloodGroupPeople: UserInfo[] }> = ({
     };
   }, []);
 
-  // Setup map instance
+  // Clear all markers helper function
+  const clearAllMarkers = () => {
+    if (markersRef.current.length > 0) {
+      console.log(`Clearing ${markersRef.current.length} markers`);
+      markersRef.current.forEach(marker => {
+        if (marker) marker.remove();
+      });
+      markersRef.current = [];
+    }
+  };
+
+  // Initialize the map just once
   useEffect(() => {
-    // Add debugging logs
-    console.log("MapComponent useEffect triggered");
-    console.log("Blood Group People count:", bloodGroupPeople?.length || 0);
-    console.log("mapRef.current exists:", !!mapRef.current);
-    console.log("mapInstanceRef.current exists:", !!mapInstanceRef.current);
-    
     // Check if user object is valid
     if (!user || !user.location || typeof user.location.lat !== 'number' || typeof user.location.long !== 'number') {
       console.error("User location data is invalid:", user);
       return;
     }
 
-    // Clean up previous map instance if it exists
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.remove();
-      mapInstanceRef.current = null;
-    }
-
-    // Initialize the map
+    // Only create the map if it doesn't exist
     if (mapRef.current && !mapInstanceRef.current) {
       console.log("Creating new map instance");
       
       try {
         const map = L.map(mapRef.current).setView(
           [user.location.lat, user.location.long], // Center on user location
-          15 // Zoom level
+          12 // Zoom level
         );
         
         mapInstanceRef.current = map;
-
-        // Add marker for the current user
-        L.marker([user.location.lat, user.location.long])
-          .addTo(map)
-          .bindPopup("<b>You are here</b><br>Blood Bank")
-          .openPopup();
 
         // Add OpenStreetMap tile layer
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         }).addTo(map);
+
+        // Add marker for the current user
+        L.marker([user.location.lat, user.location.long], {
+          icon: L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+          })
+        })
+          .addTo(map)
+          .bindPopup("Blood Bank")
+          .openPopup();
 
         setMapLoaded(true);
       } catch (error) {
@@ -126,38 +113,61 @@ const MapComponent: React.FC<{ bloodGroupPeople: UserInfo[] }> = ({
     }
   }, [user]);
 
+  // Update circle when radius changes
+  useEffect(() => {
+    if (!mapInstanceRef.current || !user) return;
+    
+    console.log("Updating circle radius to:", radius);
+    
+    // Remove old circle
+    if (circleRef.current) {
+      circleRef.current.remove();
+    }
+    
+    // Create new circle with updated radius
+    circleRef.current = L.circle([user.location.lat, user.location.long], {
+      radius: radius,
+      color: radius > 5000 ? 'red' : 'blue',
+      fillColor: radius > 5000 ? 'red' : 'blue',
+      fillOpacity: 0.2
+    }).addTo(mapInstanceRef.current);
+    
+  }, [radius, user]);
+
   // Add markers for people when map is loaded and bloodGroupPeople changes
   useEffect(() => {
     if (!mapLoaded || !mapInstanceRef.current) {
+      console.log("Map not loaded yet, skipping marker update");
       return;
     }
     
     const map = mapInstanceRef.current;
     
+    // Clear all existing markers first
+    clearAllMarkers();
+    
     // Add markers for each person in bloodGroupPeople
     if (Array.isArray(bloodGroupPeople) && bloodGroupPeople.length > 0) {
-      console.log("Adding markers for bloodGroupPeople");
+      console.log(`Adding ${bloodGroupPeople.length} markers to map`);
       
       bloodGroupPeople.forEach((person, index) => {
-        console.log(`Processing person ${index}:`, person);
-        
         // Check if person has valid location data
         if (person && person.location && 
-            typeof person.location.lat === 'number' && 
-            typeof person.location.long === 'number') {
-          
-          console.log(`Adding marker at ${person.location.lat}, ${person.location.long}`);
+            typeof person.location.coordinates?.[1] === 'number' && 
+            typeof person.location.coordinates?.[0] === 'number') {
           
           try {
-            const marker = L.marker([person.location.lat, person.location.long])
+            const marker = L.marker([person.location.coordinates[1], person.location.coordinates[0]])
               .addTo(map);
+            
+            // Store reference to marker for later removal
+            markersRef.current.push(marker);
             
             // Create popup content with person details
             const popupContent = `
               <b>${person.username || 'Unknown User'}</b><br>
               Blood Group: ${person.bloodGroup || 'Unknown'}<br>
               Phone: ${person.phoneNumber || 'N/A'}<br>
-              ${person.donorOrganization ? 'Donor Organization' : 'Individual'}
             `;
             
             marker.bindPopup(popupContent);
@@ -169,7 +179,7 @@ const MapComponent: React.FC<{ bloodGroupPeople: UserInfo[] }> = ({
         }
       });
     } else {
-      console.warn("bloodGroupPeople is empty or not an array:", bloodGroupPeople);
+      console.warn("bloodGroupPeople is empty or not an array");
     }
   }, [bloodGroupPeople, mapLoaded]);
 

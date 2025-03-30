@@ -1,12 +1,31 @@
 interface UserInfo {
-    username: string; // Required field
-    donorOrganization?: boolean;
-    location: { lat: number; long: number }; // Added location property
-    _id: string; // Added _id property
-    bloodGroup: string; // Added bloodGroup property
-    phoneNumber: string; // Added phoneNumber property
-    createdAt: string; // Added createdAt property
-    [key: string]: any; // Allow for other properties
-  }
+  username: string;
+  donorOrganization?: boolean;
+  location: {
+    type: 'Point';
+    coordinates: number[];
+  };
+  _id: string;
+  bloodGroup: string;
+  phoneNumber: string;
+  password?: string;
+  createdAt: Date;
+  __v?: number;
+  [key: string]: any;
+}
 
-  export type { UserInfo };
+interface BankInfo {
+  _id: string;
+  username: string;
+  donorOrganization: string;
+  location: {
+    lat: number;
+    long: number;
+  };
+  phoneNumber: string;
+  password?: string;
+  createdAt: Date;
+  __v?: number;
+  [key: string]: any;
+}
+  export type { UserInfo, BankInfo };
