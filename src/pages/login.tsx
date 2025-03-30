@@ -2,7 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Fade } from "@mui/material";
-import { setTokens } from "../features/auth/authSlice";
+import { setUserInformation } from "../features/auth/authSlice";
+import { LoginUser } from "../services/auth";
+
+// Define interface for user information
+interface UserInfo {
+  username?: string;
+  donorOrganization?: boolean;
+  // Add other user properties as needed
+  [key: string]: any; // Allow for other properties
+}
 
 const Login = () => {
   const navigate = useNavigate();
@@ -11,7 +20,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!username || !password) {
@@ -19,16 +28,24 @@ const Login = () => {
       return;
     }
     
-    // In a real app, you would validate credentials with an API
-    // This is a simple mock for now
-    dispatch(
-      setTokens({
-        accessToken: "mock-token",
-        refreshToken: "mock-refresh-token",
-        idToken: "mock-id-token",
-      })
-    );
-    navigate("/dashboard");
+    const response = await LoginUser(username, password);
+    console.log(response)
+    if (response.success === true) {
+      // Store user information in Redux
+      dispatch(
+        setUserInformation({
+          userInfo: response.userInfo as UserInfo,
+        })
+      );
+      // Navigate based on user type
+      if(response.userInfo.donorOrganization){
+        navigate("/dashboard"); 
+      }else{
+        navigate("/userdashboard");
+      }
+    } else {
+      setError("Invalid username or password");
+    }
   };
 
   return (

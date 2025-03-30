@@ -1,23 +1,32 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const emptyTokens = {
-  accessToken: "",
-  refreshToken: "",
-  idToken: "",
+// Define interface for user information
+interface UserInfo {
+  username?: string;
+  donorOrganization?: boolean;
+  // Add other user properties as needed
+  [key: string]: any; // Allow for other properties
+}
+
+// Define interface for the auth state
+interface AuthState {
+  userInfo: UserInfo;
+}
+
+const initialState: AuthState = {
+  userInfo: {},
 };
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: emptyTokens,
+  initialState,
   reducers: {
-    setTokens: (state, action) => {
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
-      state.idToken = action.payload.idToken;
+    setUserInformation: (state, action: PayloadAction<{ userInfo: UserInfo }>) => {
+      state.userInfo = action.payload.userInfo;
     }
   },
 });
 
-export const { setTokens } = authSlice.actions;
+export const { setUserInformation } = authSlice.actions;
 
 export default authSlice.reducer;
