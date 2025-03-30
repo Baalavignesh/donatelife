@@ -40,8 +40,6 @@ const MapComponent: React.FC<{ bloodGroupPeople: UserInfo[], radius: number }> =
 
   const user = useSelector((state: any) => state.authStore.userInfo);
 
-  console.log("MapComponent rendered with radius:", radius);
-  console.log("Blood Group People count:", bloodGroupPeople?.length || 0);
 
   // Clear and reinitialize map when component unmounts
   useEffect(() => {
@@ -117,7 +115,6 @@ const MapComponent: React.FC<{ bloodGroupPeople: UserInfo[], radius: number }> =
   useEffect(() => {
     if (!mapInstanceRef.current || !user) return;
     
-    console.log("Updating circle radius to:", radius);
     
     // Remove old circle
     if (circleRef.current) {
@@ -148,7 +145,6 @@ const MapComponent: React.FC<{ bloodGroupPeople: UserInfo[], radius: number }> =
     
     // Add markers for each person in bloodGroupPeople
     if (Array.isArray(bloodGroupPeople) && bloodGroupPeople.length > 0) {
-      console.log(`Adding ${bloodGroupPeople.length} markers to map`);
       
       bloodGroupPeople.forEach((person, index) => {
         // Check if person has valid location data

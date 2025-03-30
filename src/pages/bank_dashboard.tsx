@@ -39,6 +39,7 @@ const Dashboard = () => {
   let [myRequests, setMyRequests] = useState([]);
   const GetRequests = async (username: string) => {
     const requests = await getAllRequests(username);
+    console.log(requests.length);
     setMyRequests(requests);
   }
   const user = useSelector((state: any) => state.authStore.userInfo);
@@ -65,6 +66,7 @@ const Dashboard = () => {
             urgency={request.urgency}
             location={request.location}
             reachedUsers={request.reachedUsers}
+            reachedUsersCount={myRequests.length}
             createdAt={request.createdAt}
           />
         ))}

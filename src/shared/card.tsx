@@ -13,11 +13,12 @@ interface CardProps {
     urgency: string;
     location: Location;
     reachedUsers: ReachedUser[];
+    reachedUsersCount: number;
     createdAt: string;
   }
   
   
-  export default function Card({ _id, reqNo, status, bloodType, urgency, location, reachedUsers, createdAt }: CardProps) {
+  export default function Card({ _id, reqNo, status, bloodType, urgency, location, reachedUsers, reachedUsersCount, createdAt }: CardProps) {
     const urgencyColor = urgency === "High" ? "bg-red-500" : "bg-yellow-400";
     const statusColor = status === "Fulfilled" ? "text-green-400" : "text-red-400";
     const navigate = useNavigate();
@@ -70,7 +71,7 @@ interface CardProps {
         </div>
         <div className="flex justify-between">
           <span className="text-base font-semibold">Reached Users:</span>
-          <span className="text-base font-medium">{reachedUsers.length}</span>
+          <span className="text-base font-medium">{reachedUsersCount}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-base font-semibold">Created At:</span>

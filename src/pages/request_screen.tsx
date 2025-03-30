@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown, faArrowUp, faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import sendSMS from "../services/sms";
 
 const RequestScreen = () => {
   const { reqNo } = useParams();
@@ -19,6 +20,35 @@ const RequestScreen = () => {
   const [bloodGroupPeople, setBloodGroupPeople] = useState<any[]>([]);
   const [radius, setRadius] = useState(10000); // Default radius in meters (10km)
   const [isLoading, setIsLoading] = useState(false);
+
+  const sendSMSFunction = async (data: any) => {
+    console.log("Sending SMS to:", data)
+    console.log(typeof data)
+
+    if (data.length === 0) {
+      console.log("No data to send SMS")
+      return;
+    }
+    
+    try {
+      // For bulk messages, we can make one API call to notify users
+      data.forEach(async (item: any) => {
+        const smsData = {
+          phone: item.phoneNumber,
+          message: `Hello ${item.username.split('@')[0]}, we have a request for ${requestInfo.group} blood type. Please come to ${bankInfo.username} at ${bankInfo.location.lat}, ${bankInfo.location.long}`,
+        }
+        console.log(smsData)
+        try {
+          // await sendSMS(smsData);
+        } catch (error) {
+          console.error("Error sending SMS:", error);
+        }
+      });
+    } catch (error) {
+      console.error("Error in SMS sending process:", error);
+    }
+  }
+
 
   // Memoize the getInfo function so it doesn't change on every render
   const getInfo = useCallback(async (currentRadius: number) => {
@@ -35,9 +65,11 @@ const RequestScreen = () => {
         bankInfo.location.long, 
         radiusInKm, 
         requestInfo.group
-      );
+      );      
       
       console.log("Fetched data:", data);
+
+      sendSMSFunction(data);
       setBloodGroupPeople(data || []);
     } catch (error) {
       console.error("Error fetching users within radius:", error);
@@ -90,7 +122,7 @@ const RequestScreen = () => {
               </div>
               <div>
                 <span className="font-semibold">Reached Users:</span>{" "}
-                {requestInfo.reachedUsers?.length || 0}
+                {bloodGroupPeople.length}
               </div>
             </div>
 
